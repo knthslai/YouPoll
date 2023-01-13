@@ -1,13 +1,13 @@
-import React from "react";
-import { View } from "react-native";
-import { makeStyles, Text, Button, useThemeMode } from "@rneui/themed";
+import React from 'react';
+import { View } from 'react-native';
+import { makeStyles, Text, Button, useThemeMode } from '@rneui/themed';
 
-export default function App() {
+export default function Feed() {
   const styles = useStyles();
   const { setMode, mode } = useThemeMode();
 
   const handleOnPress = () => {
-    setMode(mode === "dark" ? "light" : "dark");
+    setMode(mode === 'dark' ? 'light' : 'dark');
   };
 
   return (
@@ -25,10 +25,10 @@ const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   text: {
-    marginVertical: theme.spacing.lg,
-  },
+    marginVertical: theme.spacing.lg
+  }
 }));
