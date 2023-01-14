@@ -1,8 +1,9 @@
-import React from "react";
-import { View } from "react-native";
-import { makeStyles, Text, Button, useThemeMode } from "@rneui/themed";
+import { View } from 'react-native';
+import { makeStyles, Text, Button, useThemeMode } from '@rneui/themed';
+import { supabase } from '../api/supabase';
+import { Props } from '../App';
 
-export default function Settings() {
+export default ({ navigation: { push } }: Props) => {
   const styles = useStyles();
   const { setMode, mode } = useThemeMode();
 
@@ -12,23 +13,23 @@ export default function Settings() {
 
   return (
     <View style={styles.container}>
-      <Text h3>Start Using RNE </Text>
-      <Text style={styles.text}>
-        Open up App.tsx to start working on your app!
-      </Text>
+      <Text h1>Settings </Text>
       <Button onPress={handleOnPress}>Switch Theme</Button>
+      <Button onPress={() => supabase.auth.signOut().then(() => push('Login'))}>
+        Log out
+      </Button>
     </View>
   );
-}
+};
 
 const useStyles = makeStyles((theme) => ({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   text: {
-    marginVertical: theme.spacing.lg,
-  },
+    marginVertical: theme.spacing.lg
+  }
 }));

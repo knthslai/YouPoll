@@ -1,34 +1,41 @@
-import React from 'react';
-import { View } from 'react-native';
-import { makeStyles, Text, Button, useThemeMode } from '@rneui/themed';
-
-export default function Login() {
-  const styles = useStyles();
-  const { setMode, mode } = useThemeMode();
-
-  const handleOnPress = () => {
-    setMode(mode === 'dark' ? 'light' : 'dark');
+import { Button, Text } from '@rneui/themed';
+import { supabase } from '../api/supabase';
+import { Props } from '../App';
+import { Fill, Form } from '../components';
+type SubmitProps = {
+  email: string;
+  password: string;
+};
+export default ({ navigation: { push } }: Props) => {
+  const handleOnSubmit = (payload: SubmitProps) => {
+    supabase.auth.signInWithPassword(payload).then(({ data, error }) => {
+      if (error)
+        return console.error(
+          '🚀 ~ file: Login.tsx:11 ~ supabase.auth.signUp ~ error',
+          error
+        );
+      if (data) {
+        push('Feed');
+      }
+    });
   };
-
   return (
-    <View style={styles.container}>
-      <Text h3>Start Using RNE </Text>
-      <Text style={styles.text}>
-        Open up App.tsx to start working on your app!
-      </Text>
-      <Button onPress={handleOnPress}>Switch Theme</Button>
-    </View>
+    <Fill>
+      <Text h1>Login</Text>
+      <Form
+        onSubmit={(props) => handleOnSubmit(props as SubmitProps)}
+        fields={[
+          { title: 'Email', type: 'email' },
+          { title: 'Password', type: 'password' }
+        ]}
+        Buttons={
+          <Button
+            type='clear'
+            title={'Sign up'}
+            onPress={() => push('Signup')}
+          />
+        }
+      />
+    </Fill>
   );
-}
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  text: {
-    marginVertical: theme.spacing.lg
-  }
-}));
+};
