@@ -50,7 +50,7 @@ export default ({
   });
 
   return (
-    <Card>
+    <Card containerStyle={{ borderRadius: 18 }}>
       {!!title && <Card.Title>{title}</Card.Title>}
       {!!title && <Card.Divider />}
 

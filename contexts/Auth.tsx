@@ -7,9 +7,9 @@ export type SignInPayload = { email: string; password: string };
 export type UserProps = { email: string; name: string; id: string };
 export interface AuthContextProps {
   user?: UserProps | null;
-  signIn(arg0: SignInPayload): Promise<void>;
-  signUp(arg0: SignInPayload): Promise<void>;
-  signOut(): Promise<void>;
+  signIn(arg0: SignInPayload): Promise<unknown>;
+  signUp(arg0: SignInPayload): Promise<unknown>;
+  signOut(): Promise<unknown>;
   setupUser: (payload: User | null) => void;
 }
 export const AuthContext = createContext<AuthContextProps>({
