@@ -2,7 +2,16 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { buildInput, InputTypeProps } from './Form.parts';
 import { Fill, Row } from './Common';
 import { Button, Card } from '@rneui/themed';
-import { isEmpty } from 'lodash';
+import { camelCase } from 'lodash';
+
+type FormProps = {
+  title?: string;
+  defaultValues?: { [key: string]: string };
+  fields: InputTypeProps[];
+  onSubmit: SubmitHandler<{}>;
+  buttonTitle?: string;
+  Buttons?: JSX.Element;
+};
 
 // Form component goal:
 // - take in an array of fields to
@@ -15,19 +24,31 @@ export default ({
   onSubmit,
   buttonTitle = 'Submit',
   Buttons
-}: {
-  title?: string;
-  defaultValues?: { [key: string]: string };
-  fields: InputTypeProps[];
-  onSubmit: SubmitHandler<{}>;
-  buttonTitle?: string;
-  Buttons?: JSX.Element;
-}): JSX.Element => {
+}: FormProps): JSX.Element => {
   const {
     control,
     handleSubmit,
-    formState: { isValid, touchedFields }
-  } = useForm({ defaultValues, mode: 'onBlur' });
+    formState: { isValid, dirtyFields }
+  } = useForm({
+    defaultValues,
+    mode: 'onTouched'
+  });
+  // requiredFields checks if
+  // - all required fields has been touched
+  // returns a boolean
+  const requiredFields = fields.every(({ title, required }) => {
+    // checks if required
+    // inputs default as 'required'
+    // unless deliberately passing in false
+    if (required !== false) {
+      const key = camelCase(title);
+      // checks if field has been touched
+      return !!dirtyFields[key];
+    }
+    // defaults to true since not required
+    return true;
+  });
+
   return (
     <Card>
       {!!title && <Card.Title>{title}</Card.Title>}
@@ -41,8 +62,10 @@ export default ({
         {Buttons}
         <Fill />
         <Button
-          // Checks all provided validation and if any field was touched
-          disabled={!isValid && isEmpty(touchedFields)}
+          // Disable form submit if
+          // - not passing any form validations
+          // - not every 'required' field was touched
+          disabled={!isValid || !requiredFields}
           title={buttonTitle}
           onPress={handleSubmit(onSubmit)}
         />

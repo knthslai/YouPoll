@@ -12,6 +12,7 @@ import {
   SettingsScreen,
   SignupScreen
 } from './screens';
+import { AuthContextProvider } from './contexts/Auth';
 
 const theme = createTheme({
   lightColors: {},
@@ -33,30 +34,33 @@ export default function App() {
     headerBackButtonMenuEnabled: false,
     headerLeft: () => false
   };
+
   return (
     <ThemeProvider theme={theme}>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name='Landing'
-            options={{ headerTitle: 'YouPoll' }}
-            component={LandingScreen}
-          />
-          <Stack.Screen
-            name='Login'
-            options={disabledBackProps}
-            component={LoginScreen}
-          />
-          <Stack.Screen name='Signup' component={SignupScreen} />
-          <Stack.Screen
-            name='Feed'
-            options={disabledBackProps}
-            component={FeedScreen}
-          />
-          <Stack.Screen name='Poll' component={PollScreen} />
-          <Stack.Screen name='Settings' component={SettingsScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <AuthContextProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name='Landing'
+              options={{ headerTitle: 'YouPoll' }}
+              component={LandingScreen}
+            />
+            <Stack.Screen
+              name='Login'
+              options={disabledBackProps}
+              component={LoginScreen}
+            />
+            <Stack.Screen name='Signup' component={SignupScreen} />
+            <Stack.Screen
+              name='Feed'
+              options={disabledBackProps}
+              component={FeedScreen}
+            />
+            <Stack.Screen name='Poll' component={PollScreen} />
+            <Stack.Screen name='Settings' component={SettingsScreen} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </AuthContextProvider>
     </ThemeProvider>
   );
 }

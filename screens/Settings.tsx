@@ -1,35 +1,36 @@
-import { View } from 'react-native';
-import { makeStyles, Text, Button, useThemeMode } from '@rneui/themed';
+import { Text, Button, useThemeMode } from '@rneui/themed';
 import { supabase } from '../api/supabase';
 import { Props } from '../App';
+import { Fill } from '../components';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Settings goal:
+// - Change style theme: "light" or "dark"
+// - Log out of supabase auth
 export default ({ navigation: { push } }: Props) => {
-  const styles = useStyles();
   const { setMode, mode } = useThemeMode();
 
-  const handleOnPress = () => {
-    setMode(mode === 'dark' ? 'light' : 'dark');
+  const handleThemeChange = () => {
+    const theme = mode === 'dark' ? 'light' : 'dark';
+    // store theme locally
+    AsyncStorage.setItem('theme', theme).then(() => {
+      // apply theme
+      setMode(theme);
+    });
   };
 
+  // Signs out of supabase auth and redirects to Login
+  const handleLogOut = () =>
+    supabase.auth
+      .signOut()
+      .then(() => push('Login'))
+      .catch(console.error);
+
   return (
-    <View style={styles.container}>
+    <Fill>
       <Text h1>Settings </Text>
-      <Button onPress={handleOnPress}>Switch Theme</Button>
-      <Button onPress={() => supabase.auth.signOut().then(() => push('Login'))}>
-        Log out
-      </Button>
-    </View>
+      <Button onPress={handleThemeChange}>Switch Theme</Button>
+      <Button onPress={handleLogOut}>Log out</Button>
+    </Fill>
   );
 };
-
-const useStyles = makeStyles((theme) => ({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colors.background,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  text: {
-    marginVertical: theme.spacing.lg
-  }
-}));
