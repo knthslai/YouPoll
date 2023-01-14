@@ -29,7 +29,7 @@ export default function Landing({ navigation: { push } }: Props) {
     // if logged in
     if (user !== undefined)
       if (user) {
-        push('Feed');
+        push('Home');
         // - if not logged in
       } else {
         push('Login');

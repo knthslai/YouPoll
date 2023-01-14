@@ -1,8 +1,9 @@
-import { Text, Button, useThemeMode } from '@rneui/themed';
+import { Button, useThemeMode } from '@rneui/themed';
 import { supabase } from '../api/supabase';
 import { Props } from '../App';
 import { Fill } from '../components';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Card from '../components/Card';
 
 // Settings goal:
 // - Change style theme: "light" or "dark"
@@ -28,9 +29,12 @@ export default ({ navigation: { push } }: Props) => {
 
   return (
     <Fill>
-      <Text h1>Settings </Text>
-      <Button onPress={handleThemeChange}>Switch Theme</Button>
-      <Button onPress={handleLogOut}>Log out</Button>
+      <Card title='Settings'>
+        <Button onPress={handleThemeChange} style={{ marginBottom: 8 }}>
+          Switch Theme
+        </Button>
+        <Button onPress={handleLogOut}>Log out</Button>
+      </Card>
     </Fill>
   );
 };

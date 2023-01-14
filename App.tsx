@@ -5,15 +5,14 @@ import {
   NativeStackScreenProps
 } from '@react-navigation/native-stack';
 import {
-  FeedScreen,
+  HomeScreen,
   LandingScreen,
   LoginScreen,
-  PollScreen,
-  SettingsScreen,
   SignupScreen
 } from './screens';
 import { AuthContextProvider } from './contexts/Auth';
 import { AnimatedBG } from './components';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const theme = createTheme({
   lightColors: {},
@@ -36,57 +35,44 @@ export type Props = NativeStackScreenProps<ParamListBase, Screens>;
 
 export default function App() {
   const Stack = createNativeStackNavigator();
-  // Used to disable the back button when
-  // - Landing -> Login
-  // - Landing -> Feed
-  const disabledBackProps = {
-    headerTitle: 'YouPoll',
-    headerBackButtonMenuEnabled: false,
-    headerLeft: () => false
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <AuthContextProvider>
         <AnimatedBG>
-          <NavigationContainer
-            theme={{
-              dark: true,
-              colors: {
-                primary: 'transparent',
-                background: 'transparent',
-                card: 'transparent',
-                text: 'black',
-                border: 'transparent',
-                notification: 'transparent'
-              }
-            }}
-          >
-            <Stack.Navigator
-              screenOptions={{ animation: 'fade', presentation: 'card' }}
+          <SafeAreaView style={{ flex: 1 }}>
+            <NavigationContainer
+              theme={{
+                dark: true,
+                colors: {
+                  primary: 'transparent',
+                  background: 'transparent',
+                  card: 'transparent',
+                  text: 'black',
+                  border: 'transparent',
+                  notification: 'transparent'
+                }
+              }}
             >
-              <Stack.Screen
-                name='Landing'
-                options={{
-                  headerTitle: 'YouPoll'
+              <Stack.Navigator
+                screenOptions={{
+                  animation: 'fade',
+                  presentation: 'card',
+                  headerTitle: 'YouPoll',
+                  headerBackButtonMenuEnabled: false,
+                  headerLeft: () => false
                 }}
-                component={LandingScreen}
-              />
-              <Stack.Screen
-                name='Login'
-                options={disabledBackProps}
-                component={LoginScreen}
-              />
-              <Stack.Screen name='Signup' component={SignupScreen} />
-              <Stack.Screen
-                name='Feed'
-                options={disabledBackProps}
-                component={FeedScreen}
-              />
-              <Stack.Screen name='Poll' component={PollScreen} />
-              <Stack.Screen name='Settings' component={SettingsScreen} />
-            </Stack.Navigator>
-          </NavigationContainer>
+              >
+                <Stack.Screen name='Landing' component={LandingScreen} />
+                <Stack.Screen name='Login' component={LoginScreen} />
+                <Stack.Screen name='Signup' component={SignupScreen} />
+                <Stack.Screen
+                  name='Home'
+                  component={HomeScreen}
+                  options={{ header: () => false }}
+                />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </SafeAreaView>
         </AnimatedBG>
       </AuthContextProvider>
     </ThemeProvider>

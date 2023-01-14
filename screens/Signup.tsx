@@ -27,7 +27,7 @@ export default ({ navigation: { push } }: Props) => {
       })
       // after successfully creating user and updating auth context
       // go to 'Feed' page
-      .then(() => push('Feed'))
+      .then(() => push('Home'))
       .catch(console.error);
 
   return (

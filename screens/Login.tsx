@@ -14,7 +14,7 @@ export default ({ navigation: { push } }: Props) => {
   const handleOnSubmit = (payload: SignInPayload) => {
     signIn(payload)
       .then(() => {
-        push('Feed');
+        push('Home');
       })
       .catch(console.error);
   };

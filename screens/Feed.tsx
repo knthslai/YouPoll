@@ -1,12 +1,14 @@
-import { Text, Button } from '@rneui/themed';
+import { Text } from '@rneui/themed';
 import { Props } from '../App';
 import { Fill } from '../components';
+import Card from '../components/Card';
 
 export default ({ navigation: { push } }: Props) => {
   return (
     <Fill>
-      <Text h1>Feed</Text>
-      <Button onPress={() => push('Settings')} title={'Settings'} />
+      <Card title='Feed'>
+        <Text h1>Content</Text>
+      </Card>
     </Fill>
   );
 };

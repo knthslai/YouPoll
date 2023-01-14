@@ -16,7 +16,7 @@ type PropsType = JSX.IntrinsicAttributes &
 
 export const Fill = (props: PropsType): JSX.Element => {
   const styles = useStyles();
-  return <View style={{ ...styles.flex, flex: 1 }} {...props} />;
+  return <View style={{ ...styles.flex, flex: 1, padding: 8 }} {...props} />;
 };
 
 export const Column = (props: PropsType): JSX.Element => {
