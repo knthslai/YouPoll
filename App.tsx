@@ -13,6 +13,7 @@ import {
 import { AuthContextProvider } from './contexts/Auth';
 import { AnimatedBG } from './components';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { PollContextProvider } from './contexts/Poll';
 
 const theme = createTheme({
   lightColors: {},
@@ -38,42 +39,44 @@ export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <AuthContextProvider>
-        <AnimatedBG>
-          <SafeAreaView style={{ flex: 1 }}>
-            <NavigationContainer
-              theme={{
-                dark: true,
-                colors: {
-                  primary: 'transparent',
-                  background: 'transparent',
-                  card: 'transparent',
-                  text: 'black',
-                  border: 'transparent',
-                  notification: 'transparent'
-                }
-              }}
-            >
-              <Stack.Navigator
-                screenOptions={{
-                  animation: 'fade',
-                  presentation: 'card',
-                  headerTitle: 'YouPoll',
-                  headerBackButtonMenuEnabled: false,
-                  headerLeft: () => false
+        <PollContextProvider>
+          <AnimatedBG>
+            <SafeAreaView style={{ flex: 1 }}>
+              <NavigationContainer
+                theme={{
+                  dark: true,
+                  colors: {
+                    primary: 'transparent',
+                    background: 'transparent',
+                    card: 'transparent',
+                    text: 'black',
+                    border: 'transparent',
+                    notification: 'transparent'
+                  }
                 }}
               >
-                <Stack.Screen name='Landing' component={LandingScreen} />
-                <Stack.Screen name='Login' component={LoginScreen} />
-                <Stack.Screen name='Signup' component={SignupScreen} />
-                <Stack.Screen
-                  name='Home'
-                  component={HomeScreen}
-                  options={{ header: () => false }}
-                />
-              </Stack.Navigator>
-            </NavigationContainer>
-          </SafeAreaView>
-        </AnimatedBG>
+                <Stack.Navigator
+                  screenOptions={{
+                    animation: 'fade',
+                    presentation: 'card',
+                    headerTitle: 'YouPoll',
+                    headerBackButtonMenuEnabled: false,
+                    headerLeft: () => false
+                  }}
+                >
+                  <Stack.Screen name='Landing' component={LandingScreen} />
+                  <Stack.Screen name='Login' component={LoginScreen} />
+                  <Stack.Screen name='Signup' component={SignupScreen} />
+                  <Stack.Screen
+                    name='Home'
+                    component={HomeScreen}
+                    options={{ header: () => false }}
+                  />
+                </Stack.Navigator>
+              </NavigationContainer>
+            </SafeAreaView>
+          </AnimatedBG>
+        </PollContextProvider>
       </AuthContextProvider>
     </ThemeProvider>
   );

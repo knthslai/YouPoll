@@ -14,7 +14,7 @@ type FormStateValues = { [key: string]: string };
 export type InputTypes = 'text' | 'password' | 'email' | 'name';
 
 export type InputTypeProps = {
-  type: InputTypes;
+  type?: InputTypes;
   title: string;
   required?: boolean;
 };

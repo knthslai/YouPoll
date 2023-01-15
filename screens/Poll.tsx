@@ -1,12 +1,9 @@
-import { Fill } from '../components';
-import Card from '../components/Card';
+import { useContext } from 'react';
+import { PollContext } from '../contexts/Poll';
+import { NewPoll, PollView } from './Poll.parts';
 
 export default () => {
-  return (
-    <Fill>
-      <Card title='Poll'>
-        <></>
-      </Card>
-    </Fill>
-  );
+  const { poll, pollId } = useContext(PollContext);
+  if (poll && pollId) return <PollView />;
+  else return <NewPoll />;
 };

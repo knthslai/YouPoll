@@ -1,12 +1,22 @@
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {
+  BottomTabScreenProps,
+  createBottomTabNavigator
+} from '@react-navigation/bottom-tabs';
 import SettingsScreen from './Settings';
 import FeedScreen from './Feed';
 import PollScreen from './Poll';
 import { Icon } from '@rneui/themed';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useContext } from 'react';
+import { PollContext } from '../contexts/Poll';
+import { ParamListBase } from '@react-navigation/native';
 
+type Screens = 'Feed' | 'Poll' | 'Settings';
+
+export type TabProps = BottomTabScreenProps<ParamListBase, Screens>;
 const Tab = createBottomTabNavigator();
 export default () => {
+  const { poll } = useContext(PollContext);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <Tab.Navigator
@@ -16,7 +26,10 @@ export default () => {
           tabBarShowLabel: false,
           tabBarActiveBackgroundColor: 'rgba(0,0,0,0.3)',
           tabBarInactiveBackgroundColor: 'rgba(0,0,0,0)',
-          tabBarActiveTintColor: 'white'
+          tabBarActiveTintColor: 'white',
+          tabBarStyle: {
+            paddingBottom: 0
+          }
         }}
       >
         <Tab.Screen
@@ -39,14 +52,22 @@ export default () => {
           component={PollScreen}
           options={{
             tabBarLabel: 'Poll',
-            tabBarIcon: ({ color }) => (
-              <Icon
-                name='help-outline'
-                type='ionicon'
-                color={color}
-                size={26}
-              />
-            )
+            tabBarIcon: ({ color }) =>
+              poll ? (
+                <Icon
+                  name='help-outline'
+                  type='ionicon'
+                  color={color}
+                  size={26}
+                />
+              ) : (
+                <Icon
+                  name='add-circle-outline'
+                  type='ionicon'
+                  color={color}
+                  size={32}
+                />
+              )
           }}
         />
         <Tab.Screen

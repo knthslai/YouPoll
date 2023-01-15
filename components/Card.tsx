@@ -1,9 +1,11 @@
 import { Theme } from '@rneui/base';
 import { Card, CardProps, Text } from '@rneui/themed';
 import { ReactNode, RefAttributes, PropsWithChildren } from 'react';
+import { ScrollView, StyleProp, ViewStyle } from 'react-native';
 export default ({
   title,
   children,
+  style,
   ...props
 }: JSX.IntrinsicAttributes &
   CardProps & { theme?: Theme | undefined; children?: ReactNode } & {
@@ -12,24 +14,24 @@ export default ({
     PropsWithChildren<
       CardProps & { theme?: Theme | undefined; children?: ReactNode }
     >
-  > & { title?: string }) => (
+  > & { title?: string; style?: StyleProp<ViewStyle> }) => (
   <Card
-    containerStyle={{
-      borderRadius: 16,
-      padding: 8,
-      margin: 8,
-      width: '100%',
-      justifyContent: 'center',
-      alignItems: 'center'
-    }}
+    containerStyle={Object.assign(
+      {
+        borderRadius: 16
+      },
+      style
+    )}
     {...props}
   >
-    {!!title && (
-      <Text h2 style={{ alignSelf: 'center' }}>
-        {title}
-      </Text>
-    )}
-    {!!title && <Card.Divider />}
-    {children}
+    <ScrollView>
+      {!!title && (
+        <Text h2 style={{ alignSelf: 'center' }}>
+          {title}
+        </Text>
+      )}
+      {!!title && <Card.Divider />}
+      {children}
+    </ScrollView>
   </Card>
 );

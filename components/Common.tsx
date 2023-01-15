@@ -1,10 +1,8 @@
 import { makeStyles } from '@rneui/themed';
-import { View, ViewProps } from 'react-native';
+import { StyleProp, View, ViewProps, ViewStyle } from 'react-native';
 
 const useStyles = makeStyles((theme) => ({
   flex: {
-    display: 'flex',
-    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center'
   }
@@ -12,28 +10,36 @@ const useStyles = makeStyles((theme) => ({
 
 type PropsType = JSX.IntrinsicAttributes &
   JSX.IntrinsicClassAttributes<View> &
-  Readonly<ViewProps>;
+  Readonly<ViewProps> & { style?: StyleProp<ViewStyle> };
 
 export const Fill = (props: PropsType): JSX.Element => {
-  const styles = useStyles();
-  return <View style={{ ...styles.flex, flex: 1, padding: 8 }} {...props} />;
-};
-
-export const Column = (props: PropsType): JSX.Element => {
-  const styles = useStyles();
   return (
     <View
-      style={{ ...styles.flex, flexDirection: 'column', height: '100%' }}
+      style={{
+        flex: 1,
+        justifyContent: 'center',
+        padding: 8
+      }}
       {...props}
     />
   );
 };
 
-export const Row = (props: PropsType): JSX.Element => {
+export const Column = (props: PropsType): JSX.Element => {
+  const styles = useStyles();
+  return (
+    <View style={{ ...styles.flex, flexDirection: 'column' }} {...props} />
+  );
+};
+
+export const Row = ({ style, ...props }: PropsType): JSX.Element => {
   const styles = useStyles();
   return (
     <View
-      style={{ ...styles.flex, flexDirection: 'row', width: '100%' }}
+      style={{
+        ...styles.flex,
+        flexDirection: 'row'
+      }}
       {...props}
     />
   );

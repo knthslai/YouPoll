@@ -1,8 +1,10 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 import { buildInput, InputTypeProps } from './Form.parts';
 import { Fill, Row } from './Common';
-import { Button, Card } from '@rneui/themed';
+import { Button } from '@rneui/themed';
 import { camelCase } from 'lodash';
+import Card from './Card';
+import { StyleProp, ViewStyle } from 'react-native';
 
 type FormProps = {
   title?: string;
@@ -11,6 +13,7 @@ type FormProps = {
   onSubmit: SubmitHandler<{}>;
   buttonTitle?: string;
   Buttons?: JSX.Element;
+  style?: StyleProp<ViewStyle>;
 };
 
 // Form component goal:
@@ -23,7 +26,8 @@ export default ({
   fields,
   onSubmit,
   buttonTitle = 'Submit',
-  Buttons
+  Buttons,
+  style
 }: FormProps): JSX.Element => {
   const {
     control,
@@ -50,10 +54,7 @@ export default ({
   });
 
   return (
-    <Card containerStyle={{ borderRadius: 18 }}>
-      {!!title && <Card.Title>{title}</Card.Title>}
-      {!!title && <Card.Divider />}
-
+    <Card style={style} title={title}>
       {/* Renders ever field prop */}
       {fields.map((field) => buildInput(field, control))}
 
