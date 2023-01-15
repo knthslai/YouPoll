@@ -1,5 +1,11 @@
 import { makeStyles } from '@rneui/themed';
-import { StyleProp, View, ViewProps, ViewStyle } from 'react-native';
+import {
+  ActivityIndicator,
+  StyleProp,
+  View,
+  ViewProps,
+  ViewStyle
+} from 'react-native';
 
 const useStyles = makeStyles((theme) => ({
   flex: {
@@ -44,3 +50,5 @@ export const Row = ({ style, ...props }: PropsType): JSX.Element => {
     />
   );
 };
+
+export const Loading = () => <ActivityIndicator size='large' />;

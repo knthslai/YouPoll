@@ -1,44 +1,25 @@
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { Fill, Form, Row } from '../components';
-import Card from '../components/Card';
-import { AuthContext, UserProps } from '../contexts/Auth';
-import { PollContext, PollProps } from '../contexts/Poll';
-import { Button, FAB, Icon, Text } from '@rneui/themed';
+import { Button, Icon, Text } from '@rneui/themed';
 import { InputTypeProps } from '../components/Form.parts';
-import { StyleProp, View, ViewStyle } from 'react-native';
-import { supabase } from '../api/supabase';
+import { StyleProp, ViewStyle } from 'react-native';
+import { UseMutateFunction } from 'react-query';
 
-export const PollView = () => {
-  const { poll, setPollId } = useContext(PollContext);
-  const { question, options }: PollProps = poll!;
-
-  return (
-    <Fill>
-      <Card title={'Poll'}>
-        <Text h3>{question}</Text>
-        {options.map(({ text }, idx) => (
-          <Text key={`${text}${idx}`}>{text}</Text>
-        ))}
-      </Card>
-      <View style={{ position: 'absolute', right: 40, bottom: 20 }}>
-        <FAB
-          icon={{ name: 'add', color: 'white' }}
-          color='turquoise'
-          onPress={() => setPollId(undefined)}
-        />
-      </View>
-    </Fill>
-  );
-};
-
-type PollFormProps = {
+export type PollFormProps = {
   [key: string]: string;
-} & { question: string };
-
-export const NewPoll = () => {
-  const { user } = useContext(AuthContext);
-  const { id: user_id } = user as UserProps;
-  const { setPollId } = useContext(PollContext);
+};
+export type PollFormPayload = {
+  question: string;
+  user_id: string;
+  options: string[];
+};
+export const NewPoll = ({
+  mutate,
+  user_id
+}: {
+  mutate: UseMutateFunction<string, unknown, PollFormPayload, unknown>;
+  user_id: string;
+}) => {
   const [options, setOptions] = useState<InputTypeProps[]>([
     { title: 'Question', type: 'text' },
     { title: 'Option 1' },
@@ -50,29 +31,7 @@ export const NewPoll = () => {
     const [question, ...options] = Object.keys(payload)
       .map((k) => payload[k])
       .filter((v) => v);
-    //create question
-    supabase
-      .from('polls')
-      .insert([{ user_id, question }])
-      .select()
-      .then(({ data, error }) => {
-        if (error)
-          console.error('🚀 ~ file: Poll.parts.tsx:53 ~ .then ~ ,error', error);
-        if (data) {
-          const [newPoll] = data! as PollProps[];
-          const { id: poll_id } = newPoll;
-          // create each option with poll_id
-          return (
-            supabase
-              .from('options')
-              .insert(options.map((text) => ({ text, poll_id })))
-              // set PollView to view created poll
-              .then(() => {
-                setPollId(poll_id);
-              })
-          );
-        }
-      });
+    mutate({ question, options, user_id });
   };
 
   const addOption = () =>

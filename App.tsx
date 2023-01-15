@@ -10,10 +10,10 @@ import {
   LoginScreen,
   SignupScreen
 } from './screens';
-import { AuthContextProvider } from './contexts/Auth';
 import { AnimatedBG } from './components';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PollContextProvider } from './contexts/Poll';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const theme = createTheme({
   lightColors: {},
@@ -36,9 +36,16 @@ export type Props = NativeStackScreenProps<ParamListBase, Screens>;
 
 export default function App() {
   const Stack = createNativeStackNavigator();
+  const queryClient = new QueryClient({
+    defaultOptions: {
+      queries: {
+        retry: 0
+      }
+    }
+  });
   return (
-    <ThemeProvider theme={theme}>
-      <AuthContextProvider>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
         <PollContextProvider>
           <AnimatedBG>
             <SafeAreaView style={{ flex: 1 }}>
@@ -77,7 +84,7 @@ export default function App() {
             </SafeAreaView>
           </AnimatedBG>
         </PollContextProvider>
-      </AuthContextProvider>
-    </ThemeProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
   );
 }

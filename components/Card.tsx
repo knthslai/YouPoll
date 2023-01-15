@@ -18,7 +18,18 @@ export default ({
   <Card
     containerStyle={Object.assign(
       {
-        borderRadius: 16
+        borderRadius: 16,
+        borderBottomColor: '#000',
+        borderBottomWidth: 1,
+        shadowColor: '#000',
+        shadowOffset: {
+          width: 0,
+          height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+
+        elevation: 5
       },
       style
     )}

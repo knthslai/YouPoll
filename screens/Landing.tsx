@@ -1,10 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useThemeMode, ThemeMode } from '@rneui/themed';
-import { useContext, useEffect } from 'react';
-import { ActivityIndicator } from 'react-native';
+import { useEffect } from 'react';
 import { Props } from '../App';
-import { Fill } from '../components';
-import { AuthContext } from '../contexts/Auth';
+import { Fill, Loading } from '../components';
+import { useGetUser } from '../hooks/Users';
 
 // Landing goals:
 //  - Check theme setting
@@ -15,7 +14,7 @@ import { AuthContext } from '../contexts/Auth';
 //    - if not logged in
 //      - navigate -> Login
 export default function Landing({ navigation: { push } }: Props) {
-  const { user } = useContext(AuthContext);
+  const { data: user } = useGetUser();
   const { setMode } = useThemeMode();
 
   // On initial load
@@ -37,7 +36,7 @@ export default function Landing({ navigation: { push } }: Props) {
   }, [user]);
   return (
     <Fill>
-      <ActivityIndicator size='large' />
+      <Loading />
     </Fill>
   );
 }
