@@ -70,6 +70,7 @@ const Chips = ({
         </Text>
       </Fill>
       <CheckBox
+        onPress={onPress}
         checked={selected}
         size={28}
         checkedColor='white'

@@ -2,7 +2,12 @@ import { useContext, useState } from 'react';
 import { Fill, Form, Loading, Row } from '../components';
 import { Button, Icon, Text } from '@rneui/themed';
 import { InputTypeProps } from '../components/Form.parts';
-import { StyleProp, TouchableOpacity, ViewStyle } from 'react-native';
+import {
+  SafeAreaView,
+  StyleProp,
+  TouchableOpacity,
+  ViewStyle
+} from 'react-native';
 import { PollContext } from '../contexts/Poll';
 import { useCreatePoll } from '../hooks/polls';
 import { useGetUser } from '../hooks/users';
@@ -29,8 +34,7 @@ export default ({ navigation: { push } }: Props) => {
   const [options, setOptions] = useState<InputTypeProps[]>([
     { title: 'Question', type: 'text' },
     { title: 'Option 1' },
-    { title: 'Option 2' },
-    { title: 'Option 3' }
+    { title: 'Option 2' }
   ]);
 
   const handleOnSubmit = (payload: PollFormProps) => {
@@ -49,14 +53,17 @@ export default ({ navigation: { push } }: Props) => {
       return [
         ...prev,
         // and increasing the numerical value by 1
-        { title: title.replace(num, (parseInt(num) + 1).toString()) }
+        {
+          title: title.replace(num, (parseInt(num) + 1).toString()),
+          required: false
+        }
       ];
     });
 
   const removeOption = () => {
     // Only remove options if length is above 4
     // minimum 3 options
-    if (options.length > 4)
+    if (options.length > 3)
       setOptions((prev) => {
         const newOptions = [...prev];
         newOptions.pop();
@@ -69,7 +76,7 @@ export default ({ navigation: { push } }: Props) => {
   if (isLoading) return <Loading />;
   else
     return (
-      <Fill>
+      <SafeAreaView style={{ flex: 1 }}>
         <Row style={{ alignItems: 'flex-start' }}>
           <TouchableOpacity onPress={() => push('Home')}>
             <Row>
@@ -113,6 +120,6 @@ export default ({ navigation: { push } }: Props) => {
             }
           />
         </Fill>
-      </Fill>
+      </SafeAreaView>
     );
 };

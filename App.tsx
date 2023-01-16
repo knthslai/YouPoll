@@ -15,6 +15,7 @@ import { AnimatedBG } from './components';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { PollContextProvider } from './contexts/Poll';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { StatusBar } from 'expo-status-bar';
 
 const theme = createTheme({
   lightColors: {},
@@ -59,6 +60,7 @@ export default function App() {
       <ThemeProvider theme={theme}>
         <PollContextProvider>
           <AnimatedBG>
+            <StatusBar style='light' />
             <SafeAreaView style={{ flex: 1 }}>
               <NavigationContainer
                 theme={{

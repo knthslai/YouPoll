@@ -18,11 +18,6 @@ export const useGetUserAnswer = ({
         .select()
         .eq('poll_id', poll_id)
         .eq('user_id', user_id);
-      console.log(
-        '🚀 ~ file: Answers.ts:21 ~ data',
-        data ? data[data.length - 1] : undefined
-      );
-
       return data ? data[data.length - 1] : undefined;
     },
     { enabled: !!poll_id && !!user_id }

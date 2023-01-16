@@ -74,7 +74,13 @@ export const buildInput = (
       key={title}
       control={control}
       rules={requirement}
-      render={(props) => <RenderInput {...props} title={title} type={type} />}
+      render={(props) => (
+        <RenderInput
+          {...props}
+          title={`${title}${required === false ? '' : ' *'}`}
+          type={type}
+        />
+      )}
       name={cameledTitle}
     />
   );
