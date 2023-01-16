@@ -1,4 +1,4 @@
-import { OptionProp } from './types/supabase';
+import { OptionProp, AnswerProp } from './types/supabase';
 
 export class optionColor {
   prev: optionColor | undefined;
@@ -35,9 +35,11 @@ const colorNode = optionColors
     }
     return optionColorClass.next!;
   }, new optionColor(optionColors[0]));
-
-export type OptionColorNode = OptionProp & { colorNode: optionColor };
-export const randOptionColor = (options: OptionProp[]): OptionColorNode[] =>
+export type OptionAnswerProps = OptionProp & { answers: AnswerProp[] };
+export type OptionColorNode = OptionAnswerProps & { colorNode: optionColor };
+export const randOptionColor = (
+  options: OptionAnswerProps[]
+): OptionColorNode[] =>
   options.slice(1).reduce(
     (result, opt, idx) => [
       ...result,

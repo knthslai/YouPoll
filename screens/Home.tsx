@@ -6,12 +6,13 @@ import SettingsScreen from './Settings';
 import FeedScreen from './Feed';
 import PollScreen from './Poll';
 import { Icon } from '@rneui/themed';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useContext } from 'react';
 import { PollContext } from '../contexts/Poll';
 import { ParamListBase } from '@react-navigation/native';
-import { useGetUser } from '../hooks/Users';
+import { useGetUser } from '../hooks/users';
 import { Props } from '../App';
+import { Loading } from '../components';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 type Screens = 'Feed' | 'Poll' | 'Settings';
 
@@ -22,15 +23,16 @@ export default ({ navigation: { push } }: Props) => {
   const { pollId } = useContext(PollContext);
   if (!user && !isLoading) {
     push('Login');
-    return <></>;
-  } else if (user)
+    return <Loading />;
+  } else
     return (
       <SafeAreaView style={{ flex: 1 }}>
         <Tab.Navigator
-          initialRouteName='Feed'
+          initialRouteName={pollId ? 'Poll' : 'Feed'}
           screenOptions={{
             header: () => null,
             tabBarShowLabel: false,
+            unmountOnBlur: true,
             tabBarActiveBackgroundColor: 'rgba(0,0,0,0.3)',
             tabBarInactiveBackgroundColor: 'rgba(0,0,0,0)',
             tabBarActiveTintColor: 'white',
@@ -56,7 +58,6 @@ export default ({ navigation: { push } }: Props) => {
           />
           <Tab.Screen
             name='Poll'
-            component={PollScreen}
             options={{
               tabBarLabel: 'Poll',
               tabBarIcon: ({ color }) =>
@@ -76,7 +77,11 @@ export default ({ navigation: { push } }: Props) => {
                   />
                 )
             }}
-          />
+          >
+            {(props: any & { push: Props['navigation']['push'] }) => (
+              <PollScreen {...props} push={push} />
+            )}
+          </Tab.Screen>
           <Tab.Screen
             name='Settings'
             component={SettingsScreen}

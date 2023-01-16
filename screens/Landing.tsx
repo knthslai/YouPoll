@@ -3,7 +3,7 @@ import { useThemeMode, ThemeMode } from '@rneui/themed';
 import { useEffect } from 'react';
 import { Props } from '../App';
 import { Fill, Loading } from '../components';
-import { useGetUser } from '../hooks/Users';
+import { useGetUser } from '../hooks/users';
 
 // Landing goals:
 //  - Check theme setting

@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Card from '../components/Card';
 import { useContext } from 'react';
 import { PollContext } from '../contexts/Poll';
-import { useLogOut } from '../hooks/Users';
+import { useLogOut } from '../hooks/users';
 
 // Settings goal:
 // - Change style theme: "light" or "dark"

@@ -1,8 +1,8 @@
 import { PostgrestError } from '@supabase/supabase-js';
 import { Alert } from 'react-native';
-import { useMutation, useQuery } from 'react-query';
+import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { supabase } from '../api/supabase';
-import { PollFormPayload } from '../screens/Poll.parts';
+import { PollFormPayload } from '../screens/Create';
 
 export type SignInPayload = { email: string; password: string };
 
@@ -16,20 +16,29 @@ export const useGetPolls = () =>
     return data;
   });
 
-export const useGetSinglePoll = (poll_id?: string) =>
-  useQuery(['polls', poll_id], async () => {
+export const useGetPrevPolls = (ids: string[]) =>
+  useQuery('getPolls', async () => {
+    const { data } = await supabase.from('polls').select().in('id', ids);
+    return data;
+  });
+
+export const useGetSinglePoll = (poll_id?: string) => {
+  const queryClient = useQueryClient();
+  return useQuery(['polls', poll_id], async () => {
     if (!poll_id) return false;
     const { data, error } = await supabase
       .from('polls')
-      .select('*, options(*)')
+      .select('*, options(*, answers(*))')
       .eq('id', poll_id)
       .single();
     if (error) {
       handleError(error);
       throw error;
     }
+    queryClient.refetchQueries('getUserAnswer');
     return data;
   });
+};
 
 export const useCreatePoll = (onSuccess: (poll_id: string) => void) =>
   useMutation(

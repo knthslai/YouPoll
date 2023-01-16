@@ -1,58 +1,125 @@
 import { useContext } from 'react';
-import { Fill, Loading, OptionChip } from '../components';
+import { Fill, OptionChip } from '../components';
 import Card from '../components/Card';
 import { PollContext } from '../contexts/Poll';
-import { FAB, Text } from '@rneui/themed';
-import { View } from 'react-native';
-import { NewPoll } from './Poll.parts';
-import { randOptionColor } from '../constants';
-import { supabase } from '../api/supabase';
-import { useGetUser } from '../hooks/Users';
-import { useCreatePoll, useGetSinglePoll } from '../hooks/Polls';
-import { OptionProp } from '../types/supabase';
+import { Chip, Text } from '@rneui/themed';
+import { ScrollView, View } from 'react-native';
+import { OptionAnswerProps, randOptionColor } from '../constants';
+import { useGetUser } from '../hooks/users';
+import { useGetPrevPolls, useGetSinglePoll } from '../hooks/polls';
 import { TabProps } from './Home';
+import { AnswerProp, OptionProp } from '../types/supabase';
+import { useGetUserAnswer, useSetAnswer } from '../hooks/answers';
+import { Props } from '../App';
+import { AddPollButton } from './Poll.parts';
+import PollsView from '../components/PollsView';
 
-export default (props: TabProps) => {
+export default ({
+  navigation: { jumpTo },
+  push
+}: TabProps & { push: Props['navigation']['push'] }) => {
   const { data: user } = useGetUser();
-  const { pollId, setPollId } = useContext(PollContext);
-  const { data: poll } = useGetSinglePoll(pollId);
-  const { mutate } = useCreatePoll(setPollId);
+  const { pollId, setPollId, viewedPolls } = useContext(PollContext);
+  const { data: polls } = useGetPrevPolls(viewedPolls);
+  const { data: answer } = useGetUserAnswer({
+    user_id: user?.id,
+    poll_id: pollId
+  });
+  const { data: poll, refetch } = useGetSinglePoll(pollId);
+  const { mutate } = useSetAnswer(refetch);
 
-  if (!pollId && user)
-    return <NewPoll {...props} mutate={mutate} user_id={user.id} />;
-  else if (!poll || !pollId || !user) return <Loading />;
-  else {
-    const { question, options } = poll!;
-    const handleOnPress = (option_id: string) =>
-      supabase
-        .from('answers')
-        .insert({ user_id: user!.id, poll_id: pollId, option_id });
+  const handleOnPressAddPollButton = () => {
+    setPollId(undefined);
+    push('Create');
+  };
+
+  if (poll && user && pollId) {
+    const { question, options } = poll;
+    const total = (
+      options as unknown as OptionProp & { answers: AnswerProp[] }[]
+    ).reduce((total: number, { answers }) => total + answers.length, 0);
+
+    const handleOnPress = async (option_id: string) => {
+      mutate({
+        option_id,
+        user_id: user.id,
+        answer_id: answer ? answer?.id : undefined,
+        poll_id: pollId
+      });
+    };
     return (
       <Fill>
         <Card title={'Poll'}>
           <Text h3>{question}</Text>
         </Card>
-        {options
-          ? randOptionColor(options as OptionProp[]).map(
-              ({ id, text, colorNode }, idx) => (
-                <OptionChip
-                  onPress={() => handleOnPress(id)}
-                  key={`${text}_${idx}`}
-                  title={text}
-                  selected={false}
-                  color={colorNode.color}
-                />
+        <ScrollView>
+          {options
+            ? randOptionColor(options as OptionAnswerProps[]).map(
+                ({ id, text, colorNode, answers }, idx) => {
+                  const showPercentage = answer && total;
+                  const percentage = Math.round((answers.length / total) * 100);
+                  const selected = answers.some(({ id }) =>
+                    answer ? id === answer?.id : false
+                  );
+                  return (
+                    <OptionChip
+                      onPress={() => handleOnPress(id)}
+                      key={`${text}_${idx}`}
+                      title={
+                        answer && total
+                          ? `${
+                              showPercentage && percentage
+                                ? `%${percentage} - `
+                                : ''
+                            }${text}`
+                          : text
+                      }
+                      selected={selected}
+                      color={colorNode.color}
+                    />
+                  );
+                }
               )
-            )
-          : null}
-        <View style={{ position: 'absolute', right: 40, bottom: 20 }}>
-          <FAB
-            icon={{ name: 'add', color: 'white' }}
-            color='turquoise'
+            : null}
+        </ScrollView>
+        <View style={{ position: 'absolute', left: 40, bottom: 20 }}>
+          <Chip
+            iconRight
+            icon={{ name: 'timer-outline', color: 'white', type: 'ionicon' }}
+            color='orange'
             onPress={() => setPollId(undefined)}
-          />
+            titleStyle={{ fontSize: 24, marginLeft: 8 }}
+            containerStyle={{
+              shadowColor: '#000',
+              shadowOffset: {
+                width: 0,
+                height: 2
+              },
+              shadowOpacity: 0.25,
+              shadowRadius: 3.84,
+              elevation: 5
+            }}
+          >
+            Previous
+          </Chip>
+        </View>
+        <View style={{ position: 'absolute', right: 40, bottom: 20 }}>
+          <AddPollButton onPress={handleOnPressAddPollButton} />
         </View>
       </Fill>
     );
-  }
+  } else
+    return (
+      <Fill>
+        {!!polls?.length && (
+          <Text h4 style={{ alignSelf: 'center' }}>
+            Previous Polls
+          </Text>
+        )}
+        {!!polls?.length && <PollsView polls={polls} jumpTo={jumpTo} />}
+        <View style={{ position: 'absolute', right: 40, bottom: 20 }}>
+          <AddPollButton onPress={handleOnPressAddPollButton} />
+        </View>
+      </Fill>
+    );
 };

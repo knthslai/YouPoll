@@ -5,6 +5,7 @@ import {
   NativeStackScreenProps
 } from '@react-navigation/native-stack';
 import {
+  CreateScreen,
   HomeScreen,
   LandingScreen,
   LoginScreen,
@@ -30,7 +31,15 @@ type StackPresentationTypes =
   | 'formSheet'
   | undefined;
 
-type Screens = 'Landing' | 'Login' | 'Signup' | 'Feed' | 'Poll' | 'Settings';
+type Screens =
+  | 'Landing'
+  | 'Login'
+  | 'Signup'
+  | 'Feed'
+  | 'Poll'
+  | 'Settings'
+  | 'Home'
+  | 'Create';
 
 export type Props = NativeStackScreenProps<ParamListBase, Screens>;
 
@@ -67,8 +76,7 @@ export default function App() {
                     animation: 'fade',
                     presentation: 'card',
                     headerTitle: 'YouPoll',
-                    headerBackButtonMenuEnabled: false,
-                    headerLeft: () => false
+                    headerBackButtonMenuEnabled: false
                   }}
                 >
                   <Stack.Screen name='Landing' component={LandingScreen} />
@@ -78,6 +86,13 @@ export default function App() {
                     name='Home'
                     component={HomeScreen}
                     options={{ header: () => false }}
+                  />
+                  <Stack.Screen
+                    name='Create'
+                    options={{
+                      headerBackButtonMenuEnabled: true
+                    }}
+                    component={CreateScreen}
                   />
                 </Stack.Navigator>
               </NavigationContainer>
