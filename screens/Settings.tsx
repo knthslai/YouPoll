@@ -12,7 +12,7 @@ import { useLogOut } from '../hooks/users';
 // - Log out of supabase auth
 export default ({ navigation: { push } }: Props) => {
   const { mutate } = useLogOut();
-  const { setPollId, setPoll } = useContext(PollContext);
+  const { setPollId } = useContext(PollContext);
   const { setMode, mode } = useThemeMode();
 
   const handleThemeChange = () => {
@@ -27,8 +27,8 @@ export default ({ navigation: { push } }: Props) => {
   // Signs out of supabase auth and redirects to Login
   const handleLogOut = () => {
     setPollId(undefined);
-    setPoll(undefined);
     mutate();
+    push('Login');
   };
 
   return (

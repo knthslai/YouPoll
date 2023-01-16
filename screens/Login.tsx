@@ -12,8 +12,6 @@ export default ({ navigation: { push } }: Props) => {
   const { mutate, isSuccess } = useSignIn();
 
   if (isSuccess && user) push('Home');
-
-  console.log('🚀 ~ file: Login.tsx:35 ~ isSuccess', { isSuccess, user });
   const handleSignup = () => push('Signup');
   return (
     <Fill>
@@ -21,6 +19,7 @@ export default ({ navigation: { push } }: Props) => {
         Login
       </Text>
       <Form
+        defaultValues={{ email: 'guest@email.com', password: 'Password1' }}
         onSubmit={(props) => mutate(props as SignInPayload)}
         fields={[
           { title: 'Email', type: 'email' },

@@ -63,6 +63,7 @@ export const useLogOut = () => {
   const queryClient = useQueryClient();
   return useMutation(() => supabase.auth.signOut(), {
     onSuccess: () => {
+      queryClient.invalidateQueries('user');
       queryClient.removeQueries();
     }
   });

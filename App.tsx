@@ -42,9 +42,9 @@ type Screens =
   | 'Create';
 
 export type Props = NativeStackScreenProps<ParamListBase, Screens>;
+const Stack = createNativeStackNavigator();
 
 export default function App() {
-  const Stack = createNativeStackNavigator();
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
@@ -78,24 +78,15 @@ export default function App() {
                     animation: 'fade',
                     presentation: 'card',
                     headerTitle: 'YouPoll',
-                    headerBackButtonMenuEnabled: false
+                    headerBackButtonMenuEnabled: false,
+                    header: () => false
                   }}
                 >
                   <Stack.Screen name='Landing' component={LandingScreen} />
                   <Stack.Screen name='Login' component={LoginScreen} />
                   <Stack.Screen name='Signup' component={SignupScreen} />
-                  <Stack.Screen
-                    name='Home'
-                    component={HomeScreen}
-                    options={{ header: () => false }}
-                  />
-                  <Stack.Screen
-                    name='Create'
-                    options={{
-                      headerBackButtonMenuEnabled: true
-                    }}
-                    component={CreateScreen}
-                  />
+                  <Stack.Screen name='Home' component={HomeScreen} />
+                  <Stack.Screen name='Create' component={CreateScreen} />
                 </Stack.Navigator>
               </NavigationContainer>
             </SafeAreaView>

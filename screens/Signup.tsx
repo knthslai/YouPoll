@@ -10,7 +10,7 @@ export type SubmitProps = {
 
 export default ({ navigation: { push } }: Props) => {
   const { mutate, isSuccess } = useSignUp();
-  if (isSuccess) push('home');
+  if (isSuccess) push('Home');
   return (
     <Fill>
       <Text h1 style={{ alignSelf: 'center' }}>

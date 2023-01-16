@@ -1,8 +1,8 @@
 import { useContext, useEffect } from 'react';
-import { Fill, OptionChip } from '../components';
+import { Fill, OptionChip, Row } from '../components';
 import Card from '../components/Card';
 import { PollContext } from '../contexts/Poll';
-import { Chip, Text } from '@rneui/themed';
+import { Chip, Icon, Text } from '@rneui/themed';
 import { ScrollView, View } from 'react-native';
 import { OptionAnswerProps, randOptionColor } from '../constants';
 import { useGetUser } from '../hooks/users';
@@ -89,7 +89,7 @@ export default ({
               )
             : null}
         </ScrollView>
-        <View style={{ position: 'absolute', left: 40, bottom: 20 }}>
+        <Row>
           <Chip
             iconRight
             icon={{ name: 'timer-outline', color: 'white', type: 'ionicon' }}
@@ -117,10 +117,9 @@ export default ({
           >
             Previous
           </Chip>
-        </View>
-        <View style={{ position: 'absolute', right: 40, bottom: 20 }}>
+          <Fill />
           <AddPollButton onPress={handleOnPressAddPollButton} />
-        </View>
+        </Row>
       </Fill>
     );
   } else
@@ -133,7 +132,17 @@ export default ({
         )}
         {!!polls?.length && <PollsView polls={polls} jumpTo={jumpTo} />}
         <View style={{ position: 'absolute', right: 40, bottom: 20 }}>
-          <AddPollButton onPress={handleOnPressAddPollButton} />
+          <Row>
+            {!polls?.length && <Text h4>Get started here </Text>}
+            {!polls?.length && (
+              <Icon
+                name='arrow-forward-outline'
+                type='ionicon'
+                style={{ marginRight: 6 }}
+              />
+            )}
+            <AddPollButton onPress={handleOnPressAddPollButton} />
+          </Row>
         </View>
       </Fill>
     );

@@ -2,7 +2,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { buildInput, InputTypeProps } from './Form.parts';
 import { Fill, Row } from './Common';
 import { Button } from '@rneui/themed';
-import { camelCase } from 'lodash';
+import { camelCase, isEmpty } from 'lodash';
 import Card from './Card';
 import { StyleProp, ViewStyle } from 'react-native';
 
@@ -66,7 +66,7 @@ export default ({
           // Disable form submit if
           // - not passing any form validations
           // - not every 'required' field was touched
-          disabled={!isValid || !requiredFields}
+          disabled={isEmpty(defaultValues) && (!isValid || !requiredFields)}
           title={buttonTitle}
           onPress={handleSubmit(onSubmit)}
         />

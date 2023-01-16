@@ -35,7 +35,7 @@ export default ({
           <TouchableOpacity key={id} onPress={() => handleOnPress(id)}>
             <Card title={question}>
               <Row>
-                {user_id === user!.id && <Text>Yours</Text>}
+                {user_id === user?.id && <Text>Yours</Text>}
                 <Fill />
                 <Text>{moment(created_at).fromNow()}</Text>
               </Row>

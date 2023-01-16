@@ -18,6 +18,10 @@ export const useGetUserAnswer = ({
         .select()
         .eq('poll_id', poll_id)
         .eq('user_id', user_id);
+      console.log(
+        '🚀 ~ file: Answers.ts:21 ~ data',
+        data ? data[data.length - 1] : undefined
+      );
 
       return data ? data[data.length - 1] : undefined;
     },
@@ -25,6 +29,7 @@ export const useGetUserAnswer = ({
   );
 
 export const useSetAnswer = () => {
+  const queryClient = useQueryClient();
   return useMutation(
     async ({
       user_id,
@@ -48,6 +53,12 @@ export const useSetAnswer = () => {
         throw 'No data';
       }
       return data;
+    },
+    {
+      onSuccess: ({ poll_id }) => {
+        queryClient.invalidateQueries(['getUserAnswer', poll_id]);
+        queryClient.invalidateQueries(['polls', poll_id]);
+      }
     }
   );
 };
