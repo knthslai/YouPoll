@@ -19,8 +19,14 @@ export default ({
     containerStyle={Object.assign(
       {
         borderRadius: 16,
-        borderBottomColor: '#000',
+        borderLeftColor: '#fff',
+        borderLeftWidth: 1,
+        borderTopColor: '#fff',
+        borderTopWidth: 1,
+        borderBottomColor: 'rgba(0,0,0,0.2)',
         borderBottomWidth: 1,
+        borderRightColor: 'rgba(0,0,0,0.2)',
+        borderRightWidth: 1,
         shadowColor: '#000',
         shadowOffset: {
           width: 0,

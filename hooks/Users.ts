@@ -11,7 +11,7 @@ export const handleError = (error: AuthError | null) => {
 };
 
 export const useGetUser = () =>
-  useQuery('getUser', async () => {
+  useQuery('user', async () => {
     const { data } = await supabase.auth.getUser();
     return data?.user;
   });
@@ -29,7 +29,7 @@ export const useSignIn = () => {
     },
     {
       onSuccess: () => {
-        queryClient.refetchQueries('getUser');
+        queryClient.invalidateQueries('user');
       }
     }
   );
@@ -52,7 +52,7 @@ export const useSignUp = () => {
           data: { name: payload.name }
         });
         handleError(error);
-        queryClient.refetchQueries('getUser');
+        queryClient.invalidateQueries('user');
         return insertData;
       }
     }
@@ -63,7 +63,6 @@ export const useLogOut = () => {
   const queryClient = useQueryClient();
   return useMutation(() => supabase.auth.signOut(), {
     onSuccess: () => {
-      queryClient.refetchQueries('getUser');
       queryClient.removeQueries();
     }
   });

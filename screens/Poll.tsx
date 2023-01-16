@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { Fill, OptionChip } from '../components';
 import Card from '../components/Card';
 import { PollContext } from '../contexts/Poll';
@@ -9,10 +9,14 @@ import { useGetUser } from '../hooks/users';
 import { useGetPrevPolls, useGetSinglePoll } from '../hooks/polls';
 import { TabProps } from './Home';
 import { AnswerProp, OptionProp } from '../types/supabase';
-import { useGetUserAnswer, useSetAnswer } from '../hooks/answers';
 import { Props } from '../App';
 import { AddPollButton } from './Poll.parts';
 import PollsView from '../components/PollsView';
+import {
+  subscribeToPollAnswers,
+  useGetUserAnswer,
+  useSetAnswer
+} from '../hooks/answers';
 
 export default ({
   navigation: { jumpTo },
@@ -25,13 +29,22 @@ export default ({
     user_id: user?.id,
     poll_id: pollId
   });
-  const { data: poll, refetch } = useGetSinglePoll(pollId);
-  const { mutate } = useSetAnswer(refetch);
+
+  const subbedInstance = subscribeToPollAnswers(pollId);
+
+  const { data: poll } = useGetSinglePoll(pollId);
+  const { mutate } = useSetAnswer();
 
   const handleOnPressAddPollButton = () => {
     setPollId(undefined);
     push('Create');
   };
+
+  useEffect(() => {
+    return () => {
+      if (subbedInstance) subbedInstance.unsubscribe();
+    };
+  }, []);
 
   if (poll && user && pollId) {
     const { question, options } = poll;
@@ -39,7 +52,7 @@ export default ({
       options as unknown as OptionProp & { answers: AnswerProp[] }[]
     ).reduce((total: number, { answers }) => total + answers.length, 0);
 
-    const handleOnPress = async (option_id: string) => {
+    const handleOnPress = (option_id: string) => {
       mutate({
         option_id,
         user_id: user.id,
@@ -58,23 +71,17 @@ export default ({
                 ({ id, text, colorNode, answers }, idx) => {
                   const showPercentage = answer && total;
                   const percentage = Math.round((answers.length / total) * 100);
-                  const selected = answers.some(({ id }) =>
-                    answer ? id === answer?.id : false
-                  );
                   return (
                     <OptionChip
+                      percentage={
+                        answer && total && showPercentage && percentage
+                          ? `%${percentage}`
+                          : undefined
+                      }
                       onPress={() => handleOnPress(id)}
                       key={`${text}_${idx}`}
-                      title={
-                        answer && total
-                          ? `${
-                              showPercentage && percentage
-                                ? `%${percentage} - `
-                                : ''
-                            }${text}`
-                          : text
-                      }
-                      selected={selected}
+                      title={text}
+                      selected={id === answer?.option_id}
                       color={colorNode.color}
                     />
                   );
@@ -90,14 +97,22 @@ export default ({
             onPress={() => setPollId(undefined)}
             titleStyle={{ fontSize: 24, marginLeft: 8 }}
             containerStyle={{
+              borderLeftColor: '#fff',
+              borderLeftWidth: 1,
+              borderTopColor: '#fff',
+              borderTopWidth: 1,
+              borderBottomColor: 'rgba(0,0,0,0.2)',
+              borderBottomWidth: 1,
+              borderRightColor: 'rgba(0,0,0,0.2)',
+              borderRightWidth: 1,
               shadowColor: '#000',
               shadowOffset: {
-                width: 0,
-                height: 2
+                width: 10,
+                height: 12
               },
-              shadowOpacity: 0.25,
-              shadowRadius: 3.84,
-              elevation: 5
+              shadowOpacity: 1,
+              shadowRadius: 16.0,
+              elevation: 24
             }}
           >
             Previous

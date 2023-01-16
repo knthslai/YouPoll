@@ -48,7 +48,9 @@ export default function App() {
   const queryClient = new QueryClient({
     defaultOptions: {
       queries: {
-        retry: 0
+        retry: 0,
+        refetchOnMount: false,
+        refetchOnWindowFocus: false
       }
     }
   });

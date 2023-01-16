@@ -7,14 +7,22 @@ export const AddPollButton = ({ onPress }: { onPress: () => void }) => (
     onPress={onPress}
     titleStyle={{ fontSize: 24, marginRight: 8 }}
     containerStyle={{
+      borderLeftColor: '#fff',
+      borderLeftWidth: 1,
+      borderTopColor: '#fff',
+      borderTopWidth: 1,
+      borderBottomColor: 'rgba(0,0,0,0.2)',
+      borderBottomWidth: 1,
+      borderRightColor: 'rgba(0,0,0,0.2)',
+      borderRightWidth: 1,
       shadowColor: '#000',
       shadowOffset: {
-        width: 0,
-        height: 2
+        width: 10,
+        height: 12
       },
-      shadowOpacity: 0.25,
-      shadowRadius: 3.84,
-      elevation: 5
+      shadowOpacity: 1,
+      shadowRadius: 16.0,
+      elevation: 24
     }}
   >
     Add Poll

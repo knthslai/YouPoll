@@ -19,7 +19,10 @@ export type PollFormPayload = {
 export default ({ navigation: { push } }: Props) => {
   const { data: user, isLoading } = useGetUser();
   const { setPollId } = useContext(PollContext);
-  const { mutate } = useCreatePoll((pollId) => {
+  // onSuccess of newly created poll
+  // send user to "Home"
+  // and set viewing poll id
+  const { mutate } = useCreatePoll((pollId: string) => {
     setPollId(pollId);
     push('Home');
   });

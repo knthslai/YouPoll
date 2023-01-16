@@ -1,13 +1,7 @@
-import { PostgrestError } from '@supabase/supabase-js';
-import { Alert } from 'react-native';
 import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { supabase } from '../api/supabase';
 
 export type SignInPayload = { email: string; password: string };
-
-export const handleError = (error: PostgrestError | null) => {
-  if (error) Alert.alert('Authentication Error', error.message);
-};
 
 export const useGetUserAnswer = ({
   poll_id,
@@ -16,26 +10,21 @@ export const useGetUserAnswer = ({
   poll_id?: string;
   user_id?: string;
 }) =>
-  useQuery('getUserAnswer', async () => {
-    if (!user_id || !poll_id) return false;
-    const { data } = await supabase
-      .from('answers')
-      .select()
-      .eq('poll_id', poll_id)
-      .eq('user_id', user_id)
-      .single();
+  useQuery(
+    ['getUserAnswer', poll_id],
+    async () => {
+      const { data } = await supabase
+        .from('answers')
+        .select()
+        .eq('poll_id', poll_id)
+        .eq('user_id', user_id);
 
-    return data;
-  });
+      return data ? data[data.length - 1] : undefined;
+    },
+    { enabled: !!poll_id && !!user_id }
+  );
 
-export const useGetAnswers = () =>
-  useQuery('getAnswers', async () => {
-    const { data } = await supabase.from('answers').select();
-    return data;
-  });
-
-export const useSetAnswer = (refetch: () => void) => {
-  const queryClient = useQueryClient();
+export const useSetAnswer = () => {
   return useMutation(
     async ({
       user_id,
@@ -48,16 +37,38 @@ export const useSetAnswer = (refetch: () => void) => {
       option_id: string;
       answer_id?: string;
     }) => {
-      const { error } = await supabase
+      const { data, error } = await supabase
         .from('answers')
-        .upsert({ id: answer_id, user_id, poll_id, option_id });
+        .upsert({ id: answer_id, user_id, poll_id, option_id })
+        .select()
+        .maybeSingle();
       if (error) {
-        handleError(error);
         throw error;
+      } else if (!data) {
+        throw 'No data';
       }
-    },
-    {
-      onSuccess: () => refetch()
+      return data;
     }
   );
+};
+
+export const subscribeToPollAnswers = (poll_id?: string) => {
+  if (!poll_id) return false;
+  const queryClient = useQueryClient();
+  return supabase
+    .channel(`custom-${poll_id}-channel`)
+    .on(
+      'postgres_changes',
+      {
+        event: '*',
+        schema: 'public',
+        table: 'answers',
+        filter: `poll_id=eq.${poll_id}`
+      },
+      () => {
+        queryClient.invalidateQueries(['getUserAnswer', poll_id]);
+        queryClient.invalidateQueries(['polls', poll_id]);
+      }
+    )
+    .subscribe();
 };

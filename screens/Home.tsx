@@ -6,13 +6,14 @@ import SettingsScreen from './Settings';
 import FeedScreen from './Feed';
 import PollScreen from './Poll';
 import { Icon } from '@rneui/themed';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 import { PollContext } from '../contexts/Poll';
 import { ParamListBase } from '@react-navigation/native';
 import { useGetUser } from '../hooks/users';
 import { Props } from '../App';
 import { Loading } from '../components';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { subscribeToPolls } from '../hooks/polls';
 
 type Screens = 'Feed' | 'Poll' | 'Settings';
 
@@ -21,6 +22,14 @@ const Tab = createBottomTabNavigator();
 export default ({ navigation: { push } }: Props) => {
   const { data: user, isLoading } = useGetUser();
   const { pollId } = useContext(PollContext);
+  const subbedInstance = subscribeToPolls();
+
+  useEffect(() => {
+    return () => {
+      subbedInstance.unsubscribe();
+    };
+  }, []);
+
   if (!user && !isLoading) {
     push('Login');
     return <Loading />;
@@ -32,7 +41,6 @@ export default ({ navigation: { push } }: Props) => {
           screenOptions={{
             header: () => null,
             tabBarShowLabel: false,
-            unmountOnBlur: true,
             tabBarActiveBackgroundColor: 'rgba(0,0,0,0.3)',
             tabBarInactiveBackgroundColor: 'rgba(0,0,0,0)',
             tabBarActiveTintColor: 'white',
