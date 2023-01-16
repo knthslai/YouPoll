@@ -13,13 +13,19 @@ import { PollFormPayload } from '../screens/Create';
 
   export const useGetPolls = () =>
     useQuery('polls', async () => {
-      const { data } = await supabase.from('polls').select();
+      const { data } = await supabase
+        .from('polls')
+        .select('*, options(*,answers(*))');
+
       return data;
     });
 
   export const useGetPrevPolls = (ids: string[]) =>
     useQuery([...ids], async () => {
-      const { data } = await supabase.from('polls').select().in('id', ids);
+      const { data } = await supabase
+        .from('polls')
+        .select('*, options(*,answers(*))')
+        .in('id', ids);
       return data;
     });
 

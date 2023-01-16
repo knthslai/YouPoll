@@ -14,7 +14,7 @@ export default ({
     PropsWithChildren<
       CardProps & { theme?: Theme | undefined; children?: ReactNode }
     >
-  > & { title?: string; style?: StyleProp<ViewStyle> }) => (
+  > & { title?: string | JSX.Element; style?: StyleProp<ViewStyle> }) => (
   <Card
     containerStyle={Object.assign(
       {
