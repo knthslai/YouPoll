@@ -6,8 +6,7 @@ import { PollContext } from '../contexts/Poll';
 import { ScrollView, TouchableOpacity } from 'react-native';
 
 import { useGetUser } from '../hooks/users';
-import { TabProps } from '../screens/Home';
-import { OptionProp, AnswerProp } from '../types/supabase';
+import { TabProps } from '../screens/Home.parts';
 import { Icon, Text } from '@rneui/themed';
 
 export default ({
@@ -15,13 +14,7 @@ export default ({
   polls
 }: {
   jumpTo: TabProps['navigation']['jumpTo'];
-  polls: {
-    created_at: string | null;
-    id: string;
-    question: string;
-    user_id: string;
-    options: OptionProp & { answers: AnswerProp[] }[];
-  }[];
+  polls: PollsAnswerProp;
 }) => {
   const { setPollId } = useContext(PollContext);
   const { data: user, isLoading } = useGetUser();
@@ -34,16 +27,12 @@ export default ({
   else
     return (
       <ScrollView>
-        {polls!.map(({ question, created_at, user_id, id, options }) => {
-          const total = options.reduce(
-            (total: number, { answers }) => total + answers.length,
-            0
-          );
+        {polls.map(({ question, created_at, user_id, id, answers }) => {
+          const typedAnswers = answers as PollAnswersProp;
+          const total = typedAnswers.length;
 
           const answered = user
-            ? options.some(({ answers }) =>
-                answers.some(({ user_id }) => user_id === user.id)
-              )
+            ? typedAnswers.some(({ user_id }) => user_id === user.id)
             : false;
           return (
             <TouchableOpacity key={id} onPress={() => handleOnPress(id)}>
@@ -83,3 +72,28 @@ export default ({
       </ScrollView>
     );
 };
+export type PollAnswersProp = {
+  created_at: string | null;
+  id: string;
+  option_id: string;
+  poll_id: string;
+  user_id: string;
+}[];
+
+export type PollsAnswerProp = ({
+  created_at: string | null;
+  id: string;
+  question: string;
+  user_id: string;
+} & {
+  answers:
+    | {
+        created_at: string | null;
+        id: string;
+        option_id: string;
+        poll_id: string;
+        user_id: string;
+      }
+    | PollAnswersProp
+    | null;
+})[];

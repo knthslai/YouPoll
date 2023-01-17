@@ -15,12 +15,12 @@ export default ({ children }: { children: ReactNode }) => {
       Animated.sequence([
         Animated.timing(animation, {
           toValue: 3,
-          duration: 15000,
+          duration: 60000,
           useNativeDriver: false
         }),
         Animated.timing(animation, {
           toValue: 0,
-          duration: 15000,
+          duration: 60000,
           useNativeDriver: false
         })
       ])

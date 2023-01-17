@@ -91,6 +91,7 @@ export type AnswerProp = {
   poll_id: string;
   user_id: string;
 };
+
 export type OptionProp = {
   created_at: string | null;
   id: string;

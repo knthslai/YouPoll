@@ -11,7 +11,7 @@ import {
 import { PollContext } from '../contexts/Poll';
 import { useCreatePoll } from '../hooks/polls';
 import { useGetUser } from '../hooks/users';
-import { Props } from '../App';
+import { Props } from '../App.parts';
 
 export type PollFormProps = {
   [key: string]: string;
@@ -21,6 +21,12 @@ export type PollFormPayload = {
   user_id: string;
   options: string[];
 };
+
+// Create poll page goals:
+// - allows auth user to create a poll
+// - polls requires a question and min. 2 options
+//   - gives user the ability to add more than 2 options
+// - after creating poll move to Poll view page with recently created poll
 export default ({ navigation: { push } }: Props) => {
   const { data: user, isLoading } = useGetUser();
   const { setPollId } = useContext(PollContext);
@@ -31,6 +37,7 @@ export default ({ navigation: { push } }: Props) => {
     setPollId(pollId);
     push('Home');
   });
+  // - polls requires a question and min. 2 options
   const [options, setOptions] = useState<InputTypeProps[]>([
     { title: 'Question', type: 'text' },
     { title: 'Option 1' },
@@ -44,6 +51,7 @@ export default ({ navigation: { push } }: Props) => {
     mutate({ question, options, user_id: user!.id });
   };
 
+  //   - gives user the ability to add more than 2 options
   const addOption = () =>
     setOptions((prev) => {
       // builds next option by destructuring

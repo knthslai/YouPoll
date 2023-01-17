@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "YouPoll",
-    "slug": "YouPoll",
+    "name": "YouPoll_knthlai",
+    "slug": "YouPoll_knthlai",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -31,7 +31,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "09168939-23cb-4c0b-ad10-84b5f7a1b78e"
+        "projectId": "9344b7a5-6751-4b1b-ad2a-460ba4c58ae9"
       }
     }
   }

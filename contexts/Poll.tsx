@@ -6,7 +6,6 @@ import React, {
   useEffect,
   useState
 } from 'react';
-import { useQueryClient } from 'react-query';
 
 export interface PollContextProps {
   viewedPolls: string[];
@@ -20,18 +19,20 @@ export const PollContext = createContext<PollContextProps>({
 
 // PollContext goals:
 // - set currently viewing poll
+// - temporarily store previously viewd polls
 export const PollContextProvider: FC<{ children: React.ReactNode }> = ({
   children
 }) => {
-  const queryClient = useQueryClient();
   const [viewedPolls, setViewedPoll] = useState<string[]>([]);
   const [pollId, setPollId] = useState<string | undefined>();
+
   useEffect(() => {
     if (pollId) {
-      queryClient.refetchQueries('getUserAnswer');
+      // - temporarily store previously viewd polls
       setViewedPoll((prev) => [...prev, pollId]);
-    } else queryClient.removeQueries('getUserAnswer');
+    }
   }, [pollId]);
+
   return (
     <PollContext.Provider value={{ viewedPolls, pollId, setPollId }}>
       {children}

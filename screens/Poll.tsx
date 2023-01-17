@@ -7,9 +7,9 @@ import { ScrollView, View } from 'react-native';
 import { OptionAnswerProps, randOptionColor } from '../constants';
 import { useGetUser } from '../hooks/users';
 import { useGetPrevPolls, useGetSinglePoll } from '../hooks/polls';
-import { TabProps } from './Home';
+import { TabProps } from './Home.parts';
 import { AnswerProp, OptionProp } from '../types/supabase';
-import { Props } from '../App';
+import { Props } from '../App.parts';
 import { AddPollButton } from './Poll.parts';
 import PollsView from '../components/PollsView';
 import {
@@ -17,37 +17,45 @@ import {
   useGetUserAnswer,
   useSetAnswer
 } from '../hooks/answers';
+import { borderAndShadow } from '../components/OptionChip';
 
+// Poll screen goal:
+// - Shows add poll button to redirect to "Create" page
+// - Shows recently viewed polls
+// - Shows selected poll from "Feed" or "Previously viewed"
 export default ({
   navigation: { jumpTo },
   push
 }: TabProps & { push: Props['navigation']['push'] }) => {
-  const { data: user } = useGetUser();
   const { pollId, setPollId, viewedPolls } = useContext(PollContext);
+  // query for polls for previously viewedPolls
   const { data: polls } = useGetPrevPolls(viewedPolls);
+  // query for currently viewing poll
+  const { data: poll } = useGetSinglePoll(pollId);
+  // query for user to create answer
+  const { data: user } = useGetUser();
+  const { mutate } = useSetAnswer();
+  // query for answer user selected
   const { data: answer } = useGetUserAnswer({
     user_id: user?.id,
     poll_id: pollId
   });
 
   const subbedInstance = subscribeToPollAnswers(pollId);
-
-  const { data: poll } = useGetSinglePoll(pollId);
-  const { mutate } = useSetAnswer();
-
-  const handleOnPressAddPollButton = () => {
-    setPollId(undefined);
-    push('Create');
-  };
-
   useEffect(() => {
     return () => {
       if (subbedInstance) subbedInstance.unsubscribe();
     };
   }, []);
 
+  const handleOnPressAddPollButton = () => {
+    setPollId(undefined);
+    push('Create');
+  };
+
   if (poll && user && pollId) {
     const { question, options } = poll;
+    // Calculate total for each answers in each option
     const total = (
       options as unknown as OptionProp & { answers: AnswerProp[] }[]
     ).reduce((total: number, { answers }) => total + answers.length, 0);
@@ -69,7 +77,10 @@ export default ({
           {options
             ? randOptionColor(options as OptionAnswerProps[]).map(
                 ({ id, text, colorNode, answers }, idx) => {
+                  // Only display percentage only until after user selected
+                  // to avoid selection bias
                   const showPercentage = answer && total;
+                  // REQ: Calculate percentage
                   const percentage = Math.round((answers.length / total) * 100);
                   return (
                     <OptionChip
@@ -96,24 +107,7 @@ export default ({
             color='orange'
             onPress={() => setPollId(undefined)}
             titleStyle={{ fontSize: 24, marginLeft: 8 }}
-            containerStyle={{
-              borderLeftColor: '#fff',
-              borderLeftWidth: 1,
-              borderTopColor: '#fff',
-              borderTopWidth: 1,
-              borderBottomColor: 'rgba(0,0,0,0.2)',
-              borderBottomWidth: 1,
-              borderRightColor: 'rgba(0,0,0,0.2)',
-              borderRightWidth: 1,
-              shadowColor: '#000',
-              shadowOffset: {
-                width: 10,
-                height: 12
-              },
-              shadowOpacity: 1,
-              shadowRadius: 16.0,
-              elevation: 24
-            }}
+            containerStyle={borderAndShadow}
           >
             Previous
           </Chip>
@@ -122,7 +116,12 @@ export default ({
         </Row>
       </Fill>
     );
-  } else
+  }
+  // If no poll is selected
+  // - show recently viewed
+  // - "get started" message
+  // - "Add poll" button
+  else
     return (
       <Fill>
         {!!polls?.length && (

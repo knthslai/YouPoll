@@ -1,4 +1,5 @@
 import { Chip } from '@rneui/themed';
+import { borderAndShadow } from '../components/OptionChip';
 
 export const AddPollButton = ({ onPress }: { onPress: () => void }) => (
   <Chip
@@ -6,24 +7,7 @@ export const AddPollButton = ({ onPress }: { onPress: () => void }) => (
     color='turquoise'
     onPress={onPress}
     titleStyle={{ fontSize: 24, marginRight: 8 }}
-    containerStyle={{
-      borderLeftColor: '#fff',
-      borderLeftWidth: 1,
-      borderTopColor: '#fff',
-      borderTopWidth: 1,
-      borderBottomColor: 'rgba(0,0,0,0.2)',
-      borderBottomWidth: 1,
-      borderRightColor: 'rgba(0,0,0,0.2)',
-      borderRightWidth: 1,
-      shadowColor: '#000',
-      shadowOffset: {
-        width: 10,
-        height: 12
-      },
-      shadowOpacity: 1,
-      shadowRadius: 16.0,
-      elevation: 24
-    }}
+    containerStyle={borderAndShadow}
   >
     Add Poll
   </Chip>

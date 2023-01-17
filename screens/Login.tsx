@@ -1,5 +1,5 @@
 import { Button, Text } from '@rneui/themed';
-import { Props } from '../App';
+import { Props } from '../App.parts';
 import { Fill, Form } from '../components';
 import { SignInPayload, useGetUser, useSignIn } from '../hooks/users';
 
@@ -10,15 +10,18 @@ import { SignInPayload, useGetUser, useSignIn } from '../hooks/users';
 export default ({ navigation: { push } }: Props) => {
   const { data: user } = useGetUser();
   const { mutate, isSuccess } = useSignIn();
-
+  // On useSignIn hook completes move to page 'Home'
   if (isSuccess && user) push('Home');
+
   const handleSignup = () => push('Signup');
+
   return (
     <Fill>
       <Text h1 style={{ alignSelf: 'center' }}>
         Login
       </Text>
       <Form
+        // for default demo login use
         defaultValues={{ email: 'guest@email.com', password: 'Password1' }}
         onSubmit={(props) => mutate(props as SignInPayload)}
         fields={[

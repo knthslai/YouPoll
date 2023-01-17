@@ -52,7 +52,7 @@ export const useSetAnswer = () => {
     {
       onSuccess: ({ poll_id }) => {
         queryClient.invalidateQueries(['getUserAnswer', poll_id]);
-        queryClient.invalidateQueries(['polls', poll_id]);
+        queryClient.invalidateQueries('polls');
       }
     }
   );
@@ -73,7 +73,7 @@ export const subscribeToPollAnswers = (poll_id?: string) => {
       },
       () => {
         queryClient.invalidateQueries(['getUserAnswer', poll_id]);
-        queryClient.invalidateQueries(['polls', poll_id]);
+        queryClient.invalidateQueries('polls');
       }
     )
     .subscribe();

@@ -11,6 +11,7 @@ export const handleError = (error: AuthError | null) => {
 };
 
 export const useGetUser = () =>
+  // REQ: use React querys to invalidate 'user' on sign/in/up/out
   useQuery('user', async () => {
     const { data } = await supabase.auth.getUser();
     return data?.user;
@@ -47,13 +48,8 @@ export const useSignUp = () => {
       return payload;
     },
     {
-      onSuccess: async (payload) => {
-        const { data: insertData, error } = await supabase.auth.updateUser({
-          data: { name: payload.name }
-        });
-        handleError(error);
+      onSuccess: async () => {
         queryClient.invalidateQueries('user');
-        return insertData;
       }
     }
   );
