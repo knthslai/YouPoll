@@ -1,6 +1,6 @@
 import { Fill, Loading } from '../components';
 import { TabProps } from './Home.parts';
-import { useGetPolls } from '../hooks/polls';
+import { useGetPolls } from '../hooks';
 import PollsView from '../components/PollsView';
 import { sortBy } from 'lodash';
 import moment from 'moment';

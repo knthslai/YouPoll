@@ -5,7 +5,7 @@ import Card from '../components/Card';
 import { PollContext } from '../contexts/Poll';
 import { ScrollView, TouchableOpacity } from 'react-native';
 
-import { useGetUser } from '../hooks/users';
+import { useGetUser } from '../hooks';
 import { TabProps } from '../screens/Home.parts';
 import { Icon, Text } from '@rneui/themed';
 

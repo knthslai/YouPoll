@@ -1,9 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useThemeMode, ThemeMode } from '@rneui/themed';
 import { useEffect } from 'react';
-import { Props } from '../App';
+import { Props } from '../App.parts';
 import { Fill, Loading } from '../components';
-import { useGetUser } from '../hooks/users';
+import { useGetUser } from '../hooks';
 
 // Landing goals:
 //  - Check theme setting

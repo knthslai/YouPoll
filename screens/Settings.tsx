@@ -5,7 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Card from '../components/Card';
 import { useContext } from 'react';
 import { PollContext } from '../contexts/Poll';
-import { useGetUser, useLogOut } from '../hooks/users';
+import { useGetUser, useLogOut } from '../hooks';
 import moment from 'moment';
 
 // Settings goal:

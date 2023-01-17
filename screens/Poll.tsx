@@ -5,8 +5,8 @@ import { PollContext } from '../contexts/Poll';
 import { Chip, Icon, Text } from '@rneui/themed';
 import { ScrollView, View } from 'react-native';
 import { OptionAnswerProps, randOptionColor } from '../constants';
-import { useGetUser } from '../hooks/users';
-import { useGetPrevPolls, useGetSinglePoll } from '../hooks/polls';
+import { useGetUser } from '../hooks';
+import { useGetPrevPolls, useGetSinglePoll } from '../hooks';
 import { TabProps } from './Home.parts';
 import { AnswerProp, OptionProp } from '../types/supabase';
 import { Props } from '../App.parts';
@@ -16,7 +16,7 @@ import {
   subscribeToPollAnswers,
   useGetUserAnswer,
   useSetAnswer
-} from '../hooks/answers';
+} from '../hooks';
 import { borderAndShadow } from '../components/OptionChip';
 
 // Poll screen goal:

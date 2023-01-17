@@ -1,7 +1,7 @@
 import { Button, Text } from '@rneui/themed';
 import { Props } from '../App.parts';
 import { Fill, Form } from '../components';
-import { useSignUp } from '../hooks/users';
+import { useSignUp } from '../hooks';
 export type SubmitProps = {
   email: string;
   password: string;

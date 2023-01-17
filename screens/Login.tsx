@@ -1,7 +1,7 @@
 import { Button, Text } from '@rneui/themed';
 import { Props } from '../App.parts';
 import { Fill, Form } from '../components';
-import { SignInPayload, useGetUser, useSignIn } from '../hooks/users';
+import { SignInPayload, useGetUser, useSignIn } from '../hooks';
 
 // Login goal:
 //  - Authenticate user

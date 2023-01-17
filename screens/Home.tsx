@@ -6,7 +6,7 @@ import { useContext } from 'react';
 import { PollContext } from '../contexts/Poll';
 import { Props } from '../App.parts';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { subscribeToPolls } from '../hooks/polls';
+import { subscribeToPolls } from '../hooks';
 import {
   FeedTabOption,
   PollTabOption,

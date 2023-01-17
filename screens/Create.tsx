@@ -9,8 +9,8 @@ import {
   ViewStyle
 } from 'react-native';
 import { PollContext } from '../contexts/Poll';
-import { useCreatePoll } from '../hooks/polls';
-import { useGetUser } from '../hooks/users';
+import { useCreatePoll } from '../hooks';
+import { useGetUser } from '../hooks';
 import { Props } from '../App.parts';
 
 export type PollFormProps = {

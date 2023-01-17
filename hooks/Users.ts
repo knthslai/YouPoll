@@ -4,8 +4,6 @@ import { useMutation, useQuery, useQueryClient } from 'react-query';
 import { supabase } from '../api/supabase';
 import { SubmitProps } from '../screens/Signup';
 
-export type SignInPayload = { email: string; password: string };
-
 export const handleError = (error: AuthError | null) => {
   if (error) Alert.alert('Authentication Error', error.message);
 };
