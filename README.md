@@ -1,10 +1,5 @@
 <div id="top"></div>
 
-<style>
-table,tr {
-    width:100%;
-}
-</style>
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
