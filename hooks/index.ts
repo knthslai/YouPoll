@@ -1,3 +1,3 @@
-export * from './users';
-export * from './polls';
-export * from './answers';
+export * from './Users';
+export * from './Polls';
+export * from './Answers';
